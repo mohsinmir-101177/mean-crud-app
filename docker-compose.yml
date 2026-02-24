@@ -1,42 +1,15 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:5
-    container_name: mongodb
-    networks:
-      - mean-network
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      retries: 5
 
   backend:
-    build: ./backend
-    image: mohsin101177/mean-crud-backend:latest
-    container_name: backend
+    image: ${DOCKER_USERNAME}/mean-crud-backend:latest
+    depends_on:
+      mongodb:
+        condition: service_healthy
     environment:
-      - MONGODB_URI=mongodb://mongodb:27017/meancrud?retryWrites=true
-    networks:
-      - mean-network
-    command: sh -c "sleep 120 && node server.js"
-    depends_on:
-      - mongodb
-
-  frontend:
-    build: ./frontend
-    image: mohsin101177/mean-crud-frontend:latest
-    container_name: frontend
-    ports:
-      - "80:80"
-    networks:
-      - mean-network
-    depends_on:
-      - backend
-
-networks:
-  mean-network:
-    driver: bridge
-
-volumes:
-  mongo-data:
+      - MONGODB_URI=mongodb://mongodb:27017/meancrud

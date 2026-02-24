@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tutorial } from '../models/tutorial.model';
 
-const baseUrl = 'http://localhost:8080/api/tutorials';
+// FIX: Removed http://localhost:8080. 
+// Using a relative path allows Nginx on Port 80 to proxy the request.
+const baseUrl = '/api/tutorials';
 
 @Injectable({
   providedIn: 'root'
