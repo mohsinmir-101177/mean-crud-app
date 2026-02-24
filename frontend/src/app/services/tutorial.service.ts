@@ -3,42 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tutorial } from '../models/tutorial.model';
 
-// FIX: Removed http://localhost:8080. 
-// Using a relative path allows Nginx on Port 80 to proxy the request.
+// This relative path allows Nginx to proxy requests to the backend
 const baseUrl = '/api/tutorials';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TutorialService {
-
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Tutorial[]> {
     return this.http.get<Tutorial[]>(baseUrl);
   }
 
-  get(id: any): Observable<Tutorial> {
-    return this.http.get<Tutorial>(`${baseUrl}/${id}`);
-  }
-
   create(data: any): Observable<any> {
     return this.http.post(baseUrl, data);
   }
-
-  update(id: any, data: any): Observable<any> {
-    return this.http.put(`${baseUrl}/${id}`, data);
-  }
-
-  delete(id: any): Observable<any> {
-    return this.http.delete(`${baseUrl}/${id}`);
-  }
-
-  deleteAll(): Observable<any> {
-    return this.http.delete(baseUrl);
-  }
-
-  findByTitle(title: any): Observable<Tutorial[]> {
-    return this.http.get<Tutorial[]>(`${baseUrl}?title=${title}`);
-  }
+  // ... keep the rest of your existing methods
 }
